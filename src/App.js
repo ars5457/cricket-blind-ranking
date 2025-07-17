@@ -1,87 +1,56 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import './App.css';
 
 const players = [
-  "Virat Kohli",
-  "MS Dhoni",
-  "AB de Villiers",
-  "Chris Gayle",
-  "Muttiah Muralitharan",
-  "Jacques Kallis",
-  "Lasith Malinga",
-  "Ben Stokes",
-  "Rashid Khan",
-  "Babar Azam",
+  "Virat Kohli", "MS Dhoni", "Rohit Sharma", "AB de Villiers", "Suresh Raina", "David Warner", 
+  "Chris Gayle", "Lasith Malinga", "Rashid Khan", "Andre Russell",
+  "Sachin Tendulkar", "Brian Lara", "Jacques Kallis", "Joe Root", "Steve Smith",
+  "Ben Stokes", "Shakib Al Hasan", "Glenn McGrath", "Kane Williamson", "Yuvraj Singh",
+  "Babar Azam", "Sanath Jayasuriya", "Anil Kumble", "Wasim Akram", "Brett Lee",
+  "Ricky Ponting", "Muttiah Muralitharan", "Saqlain Mushtaq", "Sunil Gavaskar", "Mohammad Nabi",
+  "KL Rahul", "Hardik Pandya", "Imran Tahir", "Faf du Plessis", "Shaheen Afridi",
+  "Trent Boult", "Jasprit Bumrah", "Zaheer Khan", "Rahul Dravid", "Virender Sehwag",
+  "Matthew Hayden", "Adam Gilchrist", "Michael Hussey", "Michael Clarke", "AB de Villiers",
+  "Andre Russell", "Ravindra Jadeja", "Ravichandran Ashwin", "Harbhajan Singh", "Mohammed Shami",
+  "Dwayne Bravo", "Kieron Pollard", "Shane Watson", "Shane Warne", "Pat Cummins",
+  "Josh Hazlewood", "Quinton de Kock", "Martin Guptill", "Tamim Iqbal", "Litton Das",
+  "Shreyas Iyer", "Ruturaj Gaikwad", "Tilak Varma", "Prithvi Shaw", "Shubman Gill",
+  "Devdutt Padikkal", "Yashasvi Jaiswal", "Ishan Kishan", "Sanju Samson", "Mayank Agarwal",
+  "Rishabh Pant", "Deepak Chahar", "Navdeep Saini", "T Natarajan", "Umran Malik",
+  "Mohammed Siraj", "Varun Chakravarthy", "Rahul Chahar", "Kuldeep Yadav", "Axar Patel",
+  "Washington Sundar", "Arshdeep Singh", "Bhuvneshwar Kumar", "Dinesh Karthik", "Parthiv Patel",
+  "Manish Pandey", "Ajinkya Rahane", "Cheteshwar Pujara", "Alastair Cook", "James Anderson",
+  "Stuart Broad", "Graeme Swann", "Kevin Pietersen", "Andrew Flintoff", "Ian Bell",
+  "Hashim Amla", "Dale Steyn", "AB de Villiers", "David Miller", "Aaron Finch"
 ];
 
-const shuffledPlayers = [...players].sort(() => 0.5 - Math.random());
-
 function App() {
-  const [index, setIndex] = useState(0);
-  const [rankings, setRankings] = useState(Array(10).fill(null));
-  const [gameOver, setGameOver] = useState(false);
+  const [selected, setSelected] = useState([]);
+  const [remaining, setRemaining] = useState(players);
 
-  const handleRank = (rank) => {
-    const updated = [...rankings];
-    if (updated[rank - 1] !== null) return;
-    updated[rank - 1] = shuffledPlayers[index];
-    setRankings(updated);
-    if (index === 9) setGameOver(true);
-    else setIndex(index + 1);
-  };
-
-  const resetGame = () => {
-    window.location.reload();
+  const handleSelect = (player) => {
+    setSelected([...selected, player]);
+    setRemaining(remaining.filter(p => p !== player));
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center p-4">
-      <h1 className="text-4xl font-bold mb-4">🏏 Blind Ranking: Cricket Edition</h1>
-
-      {!gameOver ? (
-        <>
-          <div className="bg-gray-800 w-full max-w-md mb-6 p-6 text-center text-xl rounded">
-            Rank this Player: <br />
-            <span className="text-2xl font-bold text-yellow-400">
-              {shuffledPlayers[index]}
-            </span>
-          </div>
-
-          <div className="grid grid-cols-5 gap-2 mb-4">
-            {Array.from({ length: 10 }, (_, i) => (
-              <button
-                key={i}
-                className="bg-yellow-500 hover:bg-yellow-600 text-black py-2 rounded"
-                onClick={() => handleRank(i + 1)}
-              >
-                {i + 1}
-              </button>
-            ))}
-          </div>
-
-          <p className="text-gray-400">Choose a rank between 1 (GOAT) and 10</p>
-        </>
-      ) : (
-        <>
-          <h2 className="text-2xl font-semibold mb-4">🏆 Your Final Ranking</h2>
-          <ul className="w-full max-w-md space-y-2 text-lg">
-            {rankings.map((player, i) => (
-              <li
-                key={i}
-                className="bg-gray-800 px-4 py-2 rounded shadow flex justify-between"
-              >
-                <span>#{i + 1}</span>
-                <span>{player}</span>
-              </li>
-            ))}
-          </ul>
-          <button
-            className="mt-6 bg-green-500 hover:bg-green-600 text-black px-4 py-2 rounded"
-            onClick={resetGame}
-          >
-            🔄 Play Again
+    <div className="App">
+      <h1>Cricket Blind Ranking Game</h1>
+      <div className="players-grid">
+        {remaining.map((player, index) => (
+          <button key={index} onClick={() => handleSelect(player)}>
+            {player}
           </button>
-        </>
-      )}
+        ))}
+      </div>
+      <div className="selected-list">
+        <h2>Your Ranking:</h2>
+        <ol>
+          {selected.map((player, index) => (
+            <li key={index}>{player}</li>
+          ))}
+        </ol>
+      </div>
     </div>
   );
 }
